@@ -25,7 +25,7 @@
 					var defered = $q.defer();
 
 					// elithaxx
-					var url = 'http://anyorigin.com/get?url=' + encodeURIComponent('http://www.europeangodatabase.eu/EGD/Player_Card.php?switch_panel=3&key=' + egdPin);
+					var url = 'http://anyorigin.com/go?url=' + encodeURIComponent('http://www.europeangodatabase.eu/EGD/Player_Card.php?switch_panel=3&key=' + egdPin);
 						
 					$http({
 						method: 'jsonp',
@@ -136,7 +136,7 @@
 
 			$scope.totalPoints = function (index) {
 				if ($scope.start !== -1 && $scope.isMarked(index)) {
-					var s = $scope.games.slice($scope.start, index);
+					var s = $scope.games.slice($scope.start, index+1);
 					window.s = s;
 					console.log(s);
 					return _.reduce(s, function (m, g) {
