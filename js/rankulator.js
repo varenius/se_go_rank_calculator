@@ -45,14 +45,13 @@
 				getHtml: function (egdPin) {
 					var defered = $q.defer();
 
-					// elithaxx
-					var url = 'http://anyorigin.com/go?url=' + encodeURIComponent('http://www.europeangodatabase.eu/EGD/Player_Card.php?switch_panel=3&key=' + egdPin);
+					var url = 'php/getEGD.php?egdPin=' + egdPin;
 						
 					$http({
-						method: 'jsonp',
-						url: url + '&callback=JSON_CALLBACK'
+						method: 'GET',
+						url: url
 					}).success(function(result) {
-						defered.resolve(result.contents);
+						defered.resolve(result);
 					});
 
 					return defered.promise;
