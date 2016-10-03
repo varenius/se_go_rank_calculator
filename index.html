@@ -1,7 +1,7 @@
 <html ng-app="rankApp">
 <head>
         <meta charset="utf-8"> 
-	<title>rankulator</title>
+	<title>Rankulatorn</title>
 	<link href="css/bootstrap.min.css" rel="stylesheet"></link>
 	<link href="css/font-awesome.min.css" rel="stylesheet"></link>
 	<!--[if lt IE 9]>
@@ -10,10 +10,19 @@
 	<![endif]-->
 </head>
 <body ng-controller="rankCtrl">
+        <!--<a href='http://goforbundet.se'><img src='SGF_logga_2013.png' alt='Hem' width = "120px"></a>-->
 	<div class="container ng-cloak">
-		<h1>Rankulator</h1>
-		<p>Rankulatorn är ett enastående samt synnerligen magnifikt verktyg för att utföra rankkalkyler.</p>
-		<p>Rankulatorn tar för närvarande inte hänsyn till halvtidspartier. Det resultat som ges här medför inte automatiskt upprankning, men kan fungera som ett preliminärt besked innan rankingkommitén kontrollerat resultatet.</p>
+		<h1>Rankulatorn</h1>
+		<p>Rankulatorn är ett enastående samt synnerligen magnifikt verktyg för
+		att utföra rankkalkyler. Givet en EGD PIN (spelarID) och en önskad rank
+		så räknar verktyget ut poängsumman enligt <a
+		href="http://goforbundet.se/web/node/30">reglerna för upprankning</a> baserat på
+	de matcher som finns inrapporterade i EGD.
+	Det resultat som ges här medför inte automatiskt upprankning, men kan
+	fungera som ett preliminärt besked innan rankingkommittén kontrollerat
+	resultatet.
+	</p> <p>Undantag: Rankulatorn tar för närvarande inte hänsyn till
+	halvtidspartier. Den kontrollerar heller inte att en spelare vunnit mot t.ex. två stycken 2D vilket krävs för att nå ranken 2D.</p>
 		<div class="row">
 			<form class="form-horizontal" ng-submit="getGames()">
 				<h3>Välj spelare</h3>
@@ -59,7 +68,7 @@
 						<th>Rank</th>
 						<th>Resultat</th>
 						<th>Poäng</th>
-						<th>Poängsumma</th>
+						<th>Poägsumma</th>
 						<th>Markera</th>
 						<th>Nollställ markering</th>
 					</tr>
@@ -71,7 +80,7 @@
 						<td>{{g.round}}</td>
 						<td>{{g.firstName}} {{g.lastName}}</td>
 						<td>{{g.rank.text}}</td>
-						<td>{{g.result ? '+' : '-'}}</td>
+						<td>{{g.result ? 'Vinst' : 'Förlust'}}</td>
 						<td>{{calculatePoints(g)}}</td>
 						<td>{{totalPoints($index)}}</td>
 						<td>
