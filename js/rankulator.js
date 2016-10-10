@@ -99,7 +99,7 @@
 	module.controller('rankCtrl', ['$scope', 'egd', function($scope, egd) {
         var i;
         $scope.selectableRankFilter = function (rank) {
-            return rank.val >= 29;
+            return rank.val >= 29 && rank.val <= 35;
         };
 
         $scope.mark = function (index) {
