@@ -66,13 +66,13 @@
 					Du uppfyller inte alla krav för att bli upprankad till {{desiredRank.text}}.
 				</div>
 				<ul class="fa-ul">
-					<li ng-show="bestRange.isEnough"><i class="fa-li fa fa-check fa-lg green"></i>Du har {{bestRange.points.points}} poäng. Poängen har du tjänat in i intervallet [{{bestRange.start}}, {{bestRange.end}}).</li>
-					<li ng-show="!bestRange.isEnough"><i class="fa-li fa fa-times fa-lg red"></i>Du har för närvarande {{bestCurrentRange.points.basePoints}} poäng. Du behöver {{requiredPoints(desiredRank) - bestCurrentRange.points.basePoints}} poäng till.</li>
-					<li><i ng-show="!danGames.isEnough" class="fa-li fa fa-times fa-lg red"></i><i ng-show="danGames.isEnough" class="fa-li fa fa-check fa-lg green"></i><ng-pluralize count="dangames.count" when="{
-						'0': 'Du har inte vunnit någon match mot {{desiredrank.text}} eller starkare.',
-						'one': 'Du har vunnit en match mot {{desiredrank.text}} eller starkare.',
-						'other': 'Du har vunnit {} matcher mot {{desiredrank.text}} eller starkare.'}">
-                    </ng-pluralize><ng-pluralize count="danGames.required - danGames.count" when="{'one': 'Du behöver vinna en sådan match till.', 'other': 'Du behöver vinna {} sådana matcher till.'}">.</li>
+					<li ng-show="bestRange.isEnough"><i class="fa-li fa fa-check fa-lg" style="color: #20C020;"></i>Du har {{bestRange.points.points}} poäng. Poängen har du tjänat in i intervallet [{{bestRange.start}}, {{bestRange.end}}).</li>
+					<li ng-show="!bestRange.isEnough"><i class="fa-li fa fa-times fa-lg" style="color: #C02020;"></i>Du har för närvarande {{bestCurrentRange.points.basePoints}} poäng. Du behöver {{requiredPoints(desiredRank) - bestCurrentRange.points.basePoints}} poäng till.</li>
+					<li><i ng-show="!danGames.isEnough" class="fa-li fa fa-times fa-lg" style="color: #C02020;"></i><i ng-show="danGames.isEnough" class="fa-li fa fa-check fa-lg" style="color: #20C020;"></i><ng-pluralize count="danGames.count" when="{
+						'0': 'Du har inte vunnit någon match mot {{desiredRank.text}} eller starkare.',
+						'one': 'Du har vunnit en match mot {{desiredRank.text}} eller starkare.',
+						'other': 'Du har vunnit {} matcher mot {{desiredRank.text}} eller starkare.'}">
+                    </ng-pluralize><span ng-show="danGames.required > danGames.count"> <ng-pluralize count="danGames.required - danGames.count" when="{'one': 'Du behöver vinna en sådan match till.', 'other': 'Du behöver vinna {} sådana matcher till.'}"></span></li>
 				</ul>
 			</div>
 			<h3>Partier</h3>
