@@ -122,7 +122,7 @@
             $scope.stop = -1;
         };
 
-        $scope.pointsForMarkedGames = function (games) {
+        $scope.pointsForMarkedGames = function (index) {
             if ($scope.start !== -1 && $scope.isMarked(index)) {
                 var s = $scope.games.slice($scope.start, index+1);
                 window.s = s;
