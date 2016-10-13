@@ -46,7 +46,7 @@
 				<div class="form-group">
 					<label for="rank" class="col-sm-2 control-label">Önskad rank</label>
 					<div class="col-sm-10">
-						<select id="rank" class="form-control" ng-options="r.text for r in ranks | filter:selectableRankFilter" ng-model="desiredRank">
+						<select id="rank" class="form-control" ng-options="r.text for r in ranks | filter:selectableRankFilter" ng-model="desiredRank" ng-change="updatePoints()">
 							<option value="">-- Välj rank --</option>
 						</select>
 					</div>
@@ -64,8 +64,8 @@
 					Du uppfyller inte alla krav för att bli upprankad till {{desiredRank.text}}.
 				</div>
 				<ul class="fa-ul">
-					<li ng-show="bestRange.isEnough"><i class="fa-li fa fa-check fa-lg" style="color: #20C020;"></i>Du har {{bestRange.points.points}} poäng. Poängen har du tjänat in i intervallet [{{bestRange.start}}, {{bestRange.end}}).</li>
-					<li ng-show="!bestRange.isEnough"><i class="fa-li fa fa-times fa-lg" style="color: #C02020;"></i>Du har för närvarande {{bestCurrentRange.points.basePoints}} poäng. Du behöver {{requiredPoints(desiredRank) - bestCurrentRange.points.basePoints}} poäng till.</li>
+					<li ng-show="bestRange.isEnough"><i class="fa-li fa fa-check fa-lg" style="color: #20C020;"></i>Du har samlat {{bestRange.points.points}} poäng för att nå {{desiredRank.text}}. Poängen har du tjänat in f.o.m. {{bestRange.enddate | moment:'YYYY-MM-DD'}} (rond {{bestRange.endround}}) t.o.m. {{bestRange.startdate | moment:'YYYY-MM-DD'}} (rond {{bestRange.startround}}).</li>
+					<li ng-show="!bestRange.isEnough"><i class="fa-li fa fa-times fa-lg" style="color: #C02020;"></i>Du har för närvarande maximalt {{bestCurrentRange.points.basePoints}} poäng (räknat f.o.m {{bestCurrentRange.enddate | moment:'YYYY-MM-DD'}} rond {{bestCurrentRange.endround}}). Du behöver {{requiredPoints(desiredRank) - bestCurrentRange.points.basePoints}} poäng till.</li>
 					<li><i ng-show="!danGames.isEnough" class="fa-li fa fa-times fa-lg" style="color: #C02020;"></i><i ng-show="danGames.isEnough" class="fa-li fa fa-check fa-lg" style="color: #20C020;"></i><ng-pluralize count="danGames.count" when="{
 						'0': 'Du har inte vunnit någon match mot {{desiredRank.text}} eller starkare.',
 						'one': 'Du har vunnit en match mot {{desiredRank.text}} eller starkare.',

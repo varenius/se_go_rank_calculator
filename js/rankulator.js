@@ -222,6 +222,10 @@
                         bestRange = {
                             start: start,
                             end: end,
+                            startround: games[start].round,
+                            startdate : games[start].date,
+                            enddate : games[end].date,
+                            endround: games[end].round,
                             points: pointsObj,
                             isEnough: pointsObj.points >= $scope.requiredPoints($scope.desiredRank)
                         };
@@ -232,6 +236,10 @@
                             bestCurrentRange = {
                                 start: start,
                                 end: end,
+                                startround: games[start].round,
+                                startdate : games[start].date,
+                                enddate : games[end].date,
+                                endround: games[end].round,
                                 points: currentPoints,
                                 isEnough: false
                             };
@@ -255,6 +263,10 @@
                 count: count,
                 isEnough: count >= required,
             };
+        }
+        $scope.updatePoints = function () {
+        $scope.findBestRange($scope.games);
+        $scope.checkDanGames($scope.games);
         }
 
         $scope.start = -1;
