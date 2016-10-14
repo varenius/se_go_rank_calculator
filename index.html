@@ -64,8 +64,8 @@
 					Du uppfyller inte alla krav för att bli upprankad till {{desiredRank.text}}.
 				</div>
 				<ul class="fa-ul">
-					<li ng-show="bestRange.isEnough"><i class="fa-li fa fa-check fa-lg" style="color: #20C020;"></i>Du har samlat {{bestRange.points.points}} poäng för att nå {{desiredRank.text}}. Poängen har du tjänat in f.o.m. {{bestRange.enddate | moment:'YYYY-MM-DD'}} (rond {{bestRange.endround}}) t.o.m. {{bestRange.startdate | moment:'YYYY-MM-DD'}} (rond {{bestRange.startround}}).</li>
-					<li ng-show="!bestRange.isEnough"><i class="fa-li fa fa-times fa-lg" style="color: #C02020;"></i>Du har för närvarande maximalt {{bestCurrentRange.points.basePoints}} poäng (räknat f.o.m {{bestCurrentRange.enddate | moment:'YYYY-MM-DD'}} rond {{bestCurrentRange.endround}}). Du behöver {{requiredPoints(desiredRank) - bestCurrentRange.points.basePoints}} poäng till.</li>
+					<li ng-show="bestRange.isEnough"><i class="fa-li fa fa-check fa-lg" style="color: #20C020;"></i>Du har samlat {{bestRange.points.points}} poäng för att nå {{desiredRank.text}}. Poängen har du tjänat på {{bestRange.end-bestRange.start}} matcher f.o.m. {{bestRange.enddate | moment:'YYYY-MM-DD'}} (rond {{bestRange.endround}}) t.o.m. {{bestRange.startdate | moment:'YYYY-MM-DD'}} (rond {{bestRange.startround}}).</li>
+					<li ng-show="!bestRange.isEnough"><i class="fa-li fa fa-times fa-lg" style="color: #C02020;"></i>Du har för närvarande maximalt {{bestCurrentRange.points.basePoints}} poäng på {{bestCurrentRange.end-bestCurrentRange.start}} matcher (räknat f.o.m {{bestCurrentRange.enddate | moment:'YYYY-MM-DD'}} rond {{bestCurrentRange.endround}}). Du behöver {{requiredPoints(desiredRank) - bestCurrentRange.points.basePoints}} poäng till.</li>
 					<li><i ng-show="!danGames.isEnough" class="fa-li fa fa-times fa-lg" style="color: #C02020;"></i><i ng-show="danGames.isEnough" class="fa-li fa fa-check fa-lg" style="color: #20C020;"></i><ng-pluralize count="danGames.count" when="{
 						'0': 'Du har inte vunnit någon match mot {{desiredRank.text}} eller starkare.',
 						'one': 'Du har vunnit en match mot {{desiredRank.text}} eller starkare.',
