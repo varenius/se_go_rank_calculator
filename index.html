@@ -17,12 +17,15 @@
 		att utföra rankkalkyler. Givet en EGD PIN (spelarID) och en önskad rank
 		så räknar verktyget ut poängsumman enligt <a
 		href="http://goforbundet.se/web/node/30">reglerna för upprankning</a> baserat på
-	de matcher som finns inrapporterade i <a href ="http://europeangodatabase.eu">EGD</a>.
-	Det resultat som ges här medför inte automatiskt upprankning, men kan
-	fungera som ett preliminärt besked innan <a href = "http://goforbundet.se/web/node/28">rankingkommittén</a> kontrollerat
-	resultatet.
-	</p> <p>Undantag: Rankulatorn tar för närvarande inte hänsyn till
-	halvtidspartier.</p>
+	de matcher som finns inrapporterade i <a href
+="http://europeangodatabase.eu">EGD</a>.  Det resultat som ges här medför inte
+automatiskt upprankning, men kan fungera som ett preliminärt besked innan <a
+href = "http://goforbundet.se/web/node/28">rankingkommittén</a> kontrollerat
+resultatet. Notera att partier från elektroniska turneringar, t.ex. Lag-EM,
+inte räknas enligt <a href="http://goforbundet.se/web/node/30">gällande
+regler</a>. 
+	</p> <p>Undantag: Enligt reglerna ska ett parti med
+mindre än 60 minuters huvudtid räknas som ett halvt parti, men rankulatorn tar för närvarande inte hänsyn till partilängd. </p>
 		<form class="form-horizontal" ng-submit="getGames()">
 			<h3>Välj spelare</h3>
 			<div class="form-group">
@@ -58,7 +61,7 @@
 			<h3>Resultat</h3>
 			<div>
 				<div ng-show="bestRange.isEnough && danGames.isEnough">
-					Du uppfyller alla krav för att bli upprankad till {{desiredRank.text}}! Bra jobbat!
+					Du uppfyller alla krav för att bli upprankad till {{desiredRank.text}} - starkt jobbat!
 				</div>
 				<div ng-show="!(bestRange.isEnough && danGames.isEnough)">
 					Du uppfyller inte alla krav för att bli upprankad till {{desiredRank.text}}.

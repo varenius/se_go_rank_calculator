@@ -76,8 +76,9 @@
                         rank: _.find(ranks, function (r) { return r.shortName == fields[8].innerText }),
                         result: $(fields[10].children[0]).attr('src') == './Immagini/Win.gif'
                     };
-
-                    result.push(game);
+                    if (!(game.tournamentName.includes('IGS-PandaNet'))) {
+                        result.push(game);
+                    };
                 });
 
                 result = _.sortBy(result, function (game) { return game.round; });
