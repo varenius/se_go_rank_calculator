@@ -127,7 +127,6 @@
             if ($scope.start !== -1 && $scope.isMarked(index)) {
                 var s = $scope.games.slice($scope.start, index+1);
                 window.s = s;
-                console.log(s);
                 return _.reduce(s, function (m, g) {
                     return $scope.pointsForGame(g) + m;
                 }, 0);
@@ -151,8 +150,6 @@
                 return 150;
             else if (rank.val == 29) // 1k
                 return 100;
-            console.dir(rank);
-            crash();
         };
 
         $scope.requiredGames = function (rank) {
@@ -162,8 +159,6 @@
                 return 17;
             else if (rank.val == 29) // 1k
                 return 13;
-            console.dir(rank);
-            crash();
         };
 
         $scope.pointsForGame = function (game) {
@@ -179,9 +174,9 @@
                 return game.result ? 35 : -25;
             else if (rankDiff == 0)  // Opponent is same rank
                 return game.result ? 25 : -35;
-            else if (rankDiff == 1)  // Opponent is one rank weaker
+            else if (rankDiff == -1)  // Opponent is one rank weaker
                 return game.result ? 10 : -35;
-            else if (rankDiff <= 2)  // Opponent is two ranks weaker
+            else if (rankDiff <= -2)  // Opponent is two ranks weaker
                 return game.result ? 0 : -35;
         };
 
@@ -214,10 +209,9 @@
             var points = 0
             var bestRange = null;
             var bestCurrentRange = null;
-
             for (start = 0; start < games.length; start++) {
-                for (end = start; end <= games.length; end++) {
-                    slice = games.slice(start, end);
+                for (end = start; end < games.length; end++) {
+                    slice = games.slice(start, end+1);
                     var pointsObj = $scope.pointsForGames(slice);
                     if (bestRange == null || pointsObj.points > bestRange.points.points)
                         bestRange = {
@@ -247,10 +241,8 @@
                     }
                 }
             }
-            console.dir(bestRange);
-            console.dir(bestCurrentRange);
-            $scope.bestRange = bestRange
-            $scope.bestCurrentRange = bestCurrentRange
+            $scope.bestRange = bestRange;
+            $scope.bestCurrentRange = bestCurrentRange;
         };
 
         $scope.checkDanGames = function (games) {
