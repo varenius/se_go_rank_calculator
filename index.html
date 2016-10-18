@@ -44,7 +44,8 @@ mindre än 60 minuters huvudtid räknas som ett halvt parti, men rankulatorn tar
 			</div>
 		</form>
 		<div ng-show="games.length">
-			<h3>Välj rank för beräkning</h3>
+			<h3>{{playerName}} <small>Senast rankad som {{declaredRank.text}}</small></h3>
+
 			<form class="form-horizontal">
 				<div class="form-group">
 					<label for="rank" class="col-sm-2 control-label">Önskad rank</label>
@@ -97,7 +98,7 @@ mindre än 60 minuters huvudtid räknas som ett halvt parti, men rankulatorn tar
 						<td><span title="{{g.tournamentName}}">{{g.tournamentCode}}</span></td>
 						<td>{{g.date | moment:'YYYY-MM-DD'}}</td>
 						<td>{{g.round}}</td>
-						<td>{{g.firstName}} {{g.lastName}}</td>
+						<td><a href="#" ng-click="switchToOpponent(g, $event)">{{g.firstName}} {{g.lastName}}</a></td>
 						<td>{{g.rank.text}}</td>
 						<td>{{g.result ? 'Vinst' : 'Förlust'}}</td>
 						<td>{{pointsForGame(g)}}</td>

@@ -60,7 +60,11 @@
                 var defered = $q.defer(),
                     page = $(pageHtml),
                     rows = $('table[width="650"]>tbody>tr', page),
-                    result = [];
+                    result = {
+                        games: [],
+                        playerName: $('span.plain5', page).text(),
+                        declaredRank: _.find(ranks, function (r) { return r.shortName == $('input[name="grade"]', page).val(); })
+                    };
 
                 rows.each(function (index, row) {
                     var fields = row.children;
@@ -73,17 +77,19 @@
                         round: fields[3].innerText,
                         lastName: fields[4].innerText,
                         firstName: fields[5].innerText,
+                        egdPin: $('a', fields[4]).attr('href').match(/\d+/),
                         rank: _.find(ranks, function (r) { return r.shortName == fields[8].innerText }),
                         result: $(fields[10].children[0]).attr('src') == './Immagini/Win.gif'
                     };
                     if (!(game.tournamentName.includes('IGS-PandaNet'))) {
-                        result.push(game);
+                        result.games.push(game);
                     };
                 });
 
-                result = _.sortBy(result, function (game) { return game.round; });
-                result = _.sortBy(result, function (game) { return game.date; });
-                defered.resolve(result.reverse());
+                result.games = _.sortBy(result.games, function (game) { return game.round; });
+                result.games = _.sortBy(result.games, function (game) { return game.date; });
+                result.games.reverse();
+                defered.resolve(result);
                 return defered.promise;
             },
             ranks: ranks
@@ -99,6 +105,18 @@
 
 	module.controller('rankCtrl', ['$scope', 'egd', function($scope, egd) {
         var i;
+        function getNextRank(rank) {
+            if (!rank || rank.val < 29) {
+                return $scope.ranks[29];
+            }
+
+            if (rank.val >= 35) {
+                return $scope.ranks[35];
+            }
+            
+            return $scope.ranks[rank.val + 1];
+        }
+
         $scope.selectableRankFilter = function (rank) {
             return rank.val >= 29 && rank.val <= 35;
         };
@@ -135,12 +153,26 @@
 
         $scope.getGames = function() {
             $scope.isSearching = true;
+            $scope.resetMarks();
             egd.getHtml($scope.egdPin).then(egd.parseHtml).then(function (res) {
-                $scope.games = res;
-                $scope.findBestRange(res);
-                $scope.checkDanGames(res);
+                $scope.playerName = res.playerName;
+                $scope.declaredRank = res.declaredRank;
+                $scope.desiredRank = getNextRank(res.declaredRank);
+
+                $scope.games = res.games;
+                $scope.findBestRange(res.games);
+                $scope.checkDanGames(res.games);
                 $scope.isSearching = false;
             });
+        };
+
+        $scope.switchToOpponent = function (game, $event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.egdPin = game.egdPin;
+
+            $scope.getGames();
         };
 
         $scope.requiredPoints = function (rank) {
@@ -257,9 +289,10 @@
                 isEnough: count >= required,
             };
         }
+        
         $scope.updatePoints = function () {
-        $scope.findBestRange($scope.games);
-        $scope.checkDanGames($scope.games);
+            $scope.findBestRange($scope.games);
+            $scope.checkDanGames($scope.games);
         }
 
         $scope.start = -1;
