@@ -1,109 +1,5 @@
 (function(angular, $, _, moment) {
-	var module = angular.module('rankApp', []);
-
-	module.factory('egd', ['$http', '$q', function($http, $q) {
-        var ranks = [];
-
-        for (i = 30; i > 0; i--) {
-            ranks.push({
-                text: i + ' kyu',
-                shortName: i + 'k',
-                val: 30 - i
-            });
-        };
-        // add relative points up to 7 dan
-        for (i = 0; i < 7; i++) {
-            ranks.push({
-                text: (i + 1) + ' dan',
-                shortName: (i + 1) + 'd',
-                val: i + 30
-            });
-        };
-
-        // set 8d and 9d to same points as 7d
-        ranks.push({
-            text: 8 + ' dan',
-            shortName: 8 + 'd',
-            val: 36
-        });
-            ranks.push({
-            text: 9 + ' dan',
-            shortName: 9 + 'd',
-            val: 36
-        });
-
-        // set all pro ranks equal to 7d in point value
-        for (i = 0; i < 9; i++) {
-            ranks.push({
-                text: (i + 1) + ' pro',
-                shortName: (i + 1) + 'p',
-                val: 36
-            });
-        };
-
-        return {
-            getHtml: function (egdPin) {
-                var defered = $q.defer();
-
-                var url = 'php/getEGD.php?egdPin=' + egdPin;
-
-                $http({
-                    method: 'GET',
-                    url: url
-                }).success(function(result) {
-                    defered.resolve(result);
-                });
-
-                return defered.promise;
-            },
-            parseHtml: function (pageHtml) {
-                var defered = $q.defer(),
-                    page = $(pageHtml),
-                    rows = $('table[width="650"]>tbody>tr', page),
-                    result = {
-                        games: [],
-                        playerName: $('span.plain5', page).text(),
-                        declaredRank: _.find(ranks, function (r) { return r.shortName == $('input[name="grade"]', page).val(); })
-                    };
-
-                rows.each(function (index, row) {
-                    var fields = row.children;
-                    if (index == 0) { return; } // header
-
-                    var game = {
-                        tournamentCode: fields[0].children[0].innerText,
-                        tournamentName: $(fields[2].children[0]).attr('title'),
-                        date: moment(fields[1].innerText, 'DD/MM/YYYY')._d,
-                        round: fields[3].innerText,
-                        lastName: fields[4].innerText,
-                        firstName: fields[5].innerText,
-                        egdPin: $('a', fields[4]).attr('href').match(/\d+/),
-                        rank: _.find(ranks, function (r) { return r.shortName == fields[8].innerText }),
-                        result: $(fields[10].children[0]).attr('src') == './Immagini/Win.gif'
-                    };
-                    if (!(game.tournamentName.includes('IGS-PandaNet'))) {
-                        result.games.push(game);
-                    };
-                });
-
-                result.games = _.sortBy(result.games, function (game) { return game.round; });
-                result.games = _.sortBy(result.games, function (game) { return game.date; });
-                result.games.reverse();
-                defered.resolve(result);
-                return defered.promise;
-            },
-            ranks: ranks
-        };
-    }]);
-
-	module.filter('moment', [function () {
-		return function (value, format) {
-			if (!value) { return "-"; }
-			return moment(value).format(format);
-		};
-	}]);
-
-	module.controller('rankCtrl', ['$scope', 'egd', function($scope, egd) {
+	angular.module('rankApp').controller('rankCtrl', ['$scope', 'egd', 'ranks', '$uibModal', function($scope, egd, ranks, $uibModal) {
         var i;
         function getNextRank(rank) {
             if (!rank || rank.val < 29) {
@@ -149,13 +45,16 @@
                     return $scope.pointsForGame(g) + m;
                 }, 0);
             }
-        }
+        };
 
         $scope.getGames = function() {
+            $scope.games = null;
             $scope.isSearching = true;
             $scope.resetMarks();
-            egd.getHtml($scope.egdPin).then(egd.parseHtml).then(function (res) {
-                $scope.playerName = res.playerName;
+            egd.getGamesHtml($scope.search.egdPin).then(egd.parseGamesHtml).then(function (res) {
+                $scope.playerName = res.fullname;
+                $scope.search.firstname = res.firstname;
+                $scope.search.lastname = res.lastname;
                 $scope.declaredRank = res.declaredRank;
                 $scope.desiredRank = getNextRank(res.declaredRank);
 
@@ -165,12 +64,10 @@
                 $scope.isSearching = false;
             });
         };
+        
 
-        $scope.switchToOpponent = function (game, $event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-
-            $scope.egdPin = game.egdPin;
+        $scope.switchToOpponent = function (egdPin) {
+            $scope.search.egdPin = egdPin;
 
             $scope.getGames();
         };
@@ -288,23 +185,55 @@
                 count: count,
                 isEnough: count >= required,
             };
-        }
+        };
         
         $scope.updatePoints = function () {
             $scope.findBestRange($scope.games);
             $scope.checkDanGames($scope.games);
-        }
+        };
+
+
+        $scope.searchPlayers = function () {
+            $scope.games = null;
+            egd.getPlayers($scope.search.lastname, $scope.search.firstname).then(function (players) {
+                if (!players || !players.length) { return; }
+
+                if (players.length == 1) {
+                    $scope.switchToOpponent(players[0].Pin_Player);
+                } else {
+                    $uibModal.open({
+                        animation: true,
+                        ariaLabelledBy: 'modal-title',
+                        ariaDescribedBy: 'modal-body',
+                        templateUrl: 'playerListTemplate.html',
+                        controller: 'playerListController',
+                        resolve: {
+                            selectPlayer: function () { 
+                                return function (egdPin) {
+                                    $scope.switchToOpponent(egdPin);
+                                }
+                            },
+                            players: function () { return players; }
+                        }
+                    });
+                }
+            });
+        };
 
         $scope.start = -1;
         $scope.stop = -1;
 
-        $scope.egdPin = 14986906;
-        $scope.ranks = egd.ranks;
+        $scope.ranks = ranks;
         $scope.desiredRank = $scope.ranks[29];
 
         $scope.bestRange = {};
         $scope.bestCurrentRange = {};
-		}
-	]);
+
+        $scope.search = {
+            by: 'name',
+            egdPin: 14986906,
+            lastname: 'Aahs'
+        }
+	}]);
 
 })(angular, jQuery, _, moment);
