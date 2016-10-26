@@ -9,7 +9,7 @@
             if (rank.val >= 35) {
                 return $scope.ranks[35];
             }
-            
+
             return $scope.ranks[rank.val + 1];
         }
 
@@ -53,8 +53,8 @@
             $scope.resetMarks();
             egd.getGamesHtml($scope.search.egdPin).then(egd.parseGamesHtml).then(function (res) {
                 $scope.playerName = res.fullname;
-                $scope.search.firstname = res.firstname;
-                $scope.search.lastname = res.lastname;
+                $scope.search.firstname = '';
+                $scope.search.lastname = '';
                 $scope.declaredRank = res.declaredRank;
                 $scope.desiredRank = getNextRank(res.declaredRank);
 
@@ -64,7 +64,6 @@
                 $scope.isSearching = false;
             });
         };
-        
 
         $scope.switchToOpponent = function (egdPin) {
             $scope.search.egdPin = egdPin;
@@ -186,12 +185,11 @@
                 isEnough: count >= required,
             };
         };
-        
+
         $scope.updatePoints = function () {
             $scope.findBestRange($scope.games);
             $scope.checkDanGames($scope.games);
         };
-
 
         $scope.searchPlayers = function () {
             $scope.games = null;
@@ -208,7 +206,7 @@
                         templateUrl: 'playerListTemplate.html',
                         controller: 'playerListController',
                         resolve: {
-                            selectPlayer: function () { 
+                            selectPlayer: function () {
                                 return function (egdPin) {
                                     $scope.switchToOpponent(egdPin);
                                 }
