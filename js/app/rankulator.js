@@ -192,8 +192,21 @@
         };
 
         $scope.searchPlayers = function () {
+            function egdifyName(name) {
+                if (!name) { return name }
+
+                return name.replace(/å/gi, 'aa')
+                    .replace(/ä/gi, 'ae')
+                    .replace(/ö/gi, 'oe')
+                    .replace(/[á]/gi, 'a')
+                    .replace(/[é]/gi, 'e')
+                    .replace(/[í]/gi, 'i')
+                    .replace(/[ó]/gi, 'o')
+                    .replace(/[ú]/gi, 'u')
+                    .replace(/[ý]/gi, 'y');
+            }
             $scope.games = null;
-            egd.getPlayers($scope.search.lastname, $scope.search.firstname).then(function (players) {
+            egd.getPlayers(egdifyName($scope.search.lastname), egdifyName($scope.search.firstname)).then(function (players) {
                 if (!players || !players.length) { return; }
 
                 if (players.length == 1) {
@@ -230,7 +243,7 @@
         $scope.search = {
             by: 'name',
             egdPin: 14986906,
-            lastname: 'Aahs'
+            lastname: 'Åhs'
         }
 	}]);
 
