@@ -38,8 +38,8 @@
         };
 
         $scope.pointsForMarkedGames = function (index) {
-            if ($scope.start !== -1 && $scope.isMarked(index)) {
-                var s = $scope.games.slice($scope.start, index+1);
+            if ($scope.stop !== -1 && $scope.isMarked(index)) {
+                var s = $scope.games.slice(index, $scope.stop+1);
                 window.s = s;
                 return _.reduce(s, function (m, g) {
                     return $scope.pointsForGame(g) + m;
